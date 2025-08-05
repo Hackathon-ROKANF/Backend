@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부동산 등기부등본 조회 API 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 부동산 등기부등본 조회 API 테스트</h1>
+
+        <!-- 탭 메뉴 -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('simple')">간편검색</div>
+            <div class="tab" onclick="showTab('lot')">지번검색</div>
+            <div class="tab" onclick="showTab('road')">도로명주소검색</div>
+        </div>
+
+        <!-- 간편검색 탭 -->
+        <div id="simple-tab" class="tab-content active">
+            <h3>간편검색</h3>
+            <form id="simpleForm">
+                <div class="form-group">
+                    <label for="simplePhoneNo">휴대폰 번호:</label>
+                    <input type="text" id="simplePhoneNo" value="01083662414" placeholder="예: 01012345678">
+                </div>
+                <div class="form-group">
+                    <label for="simplePassword">비밀번호:</label>
+                    <input type="password" id="simplePassword" value="0000" placeholder="4자리 숫자">
+                </div>
+                <div class="form-group">
+                    <label for="simpleAddress">주소:</label>
+                    <input type="text" id="simpleAddress" value="경기도 용인시" placeholder="예: 서울특별시 강남구">
+                </div>
+                <button type="button" onclick="testSimpleSearch()">간편검색 실행</button>
+            </form>
+        </div>
+
+        <!-- 지번검색 탭 -->
+        <div id="lot-tab" class="tab-content">
+            <h3>지번검색</h3>
+            <form id="lotForm">
+                <div class="form-group">
+                    <label for="lotPhoneNo">휴대폰 번호:</label>
+                    <input type="text" id="lotPhoneNo" value="01083662414" placeholder="예: 01012345678">
+                </div>
+                <div class="form-group">
+                    <label for="lotPassword">비밀번호:</label>
+                    <input type="password" id="lotPassword" value="0000" placeholder="4자리 숫자">
+                </div>
+                <div class="form-group">
+                    <label for="lotAddrSido">시/도:</label>
+                    <input type="text" id="lotAddrSido" value="경기도" placeholder="예: 경기도">
+                </div>
+                <div class="form-group">
+                    <label for="lotAddrDong">읍면동:</label>
+                    <input type="text" id="lotAddrDong" value="지행동" placeholder="예: 지행동">
+                </div>
+                <div class="form-group">
+                    <label for="lotAddrLotNumber">지번:</label>
+                    <input type="text" id="lotAddrLotNumber" value="691-3" placeholder="예: 123-45">
+                </div>
+                <div class="form-group">
+                    <label for="lotRealtyType">부동산구분:</label>
+                    <select id="lotRealtyType">
+                        <option value="0">토지+건물</option>
+                        <option value="1" selected>집합건물</option>
+                        <option value="2">토지</option>
+                        <option value="3">건물</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lotBuildingName">건물명 (선택사항):</label>
+                    <input type="text" id="lotBuildingName" value="현진에버빌" placeholder="예: 현진에버빌">
+                </div>
+                <div class="form-group">
+                    <label for="lotDong">동 (선택사항):</label>
+                    <input type="text" id="lotDong" value="104" placeholder="예: 101">
+                </div>
+                <div class="form-group">
+                    <label for="lotHo">호 (선택사항):</label>
+                    <input type="text" id="lotHo" value="901" placeholder="예: 1001">
+                </div>
+                <button type="button" onclick="testLotNumberSearch()">지번검색 실행</button>
+            </form>
+        </div>
+
+        <!-- 도로명주소검색 탭 -->
+        <div id="road-tab" class="tab-content">
+            <h3>도로명주소검색</h3>
+            <form id="roadForm">
+                <div class="form-group">
+                    <label for="roadPhoneNo">휴대폰 번호:</label>
+                    <input type="text" id="roadPhoneNo" value="01083662414" placeholder="예: 01012345678">
+                </div>
+                <div class="form-group">
+                    <label for="roadPassword">비밀번호:</label>
+                    <input type="password" id="roadPassword" value="0000" placeholder="4자리 숫자">
+                </div>
+                <div class="form-group">
+                    <label for="roadAddrSido">시/도:</label>
+                    <input type="text" id="roadAddrSido" value="경기도" placeholder="예: 경기도">
+                </div>
+                <div class="form-group">
+                    <label for="roadAddrSigungu">시군구:</label>
+                    <input type="text" id="roadAddrSigungu" value="용인시" placeholder="예: 용인시">
+                </div>
+                <div class="form-group">
+                    <label for="roadAddrRoadName">도로명:</label>
+                    <input type="text" id="roadAddrRoadName" value="신갈로84번길" placeholder="예: 테헤란로">
+                </div>
+                <div class="form-group">
+                    <label for="roadAddrBuildingNumber">건물번호:</label>
+                    <input type="text" id="roadAddrBuildingNumber" value="16-9" placeholder="예: 123">
+                </div>
+                <div class="form-group">
+                    <label for="roadBuildingName">건물명 (선택사항):</label>
+                    <input type="text" id="roadBuildingName" value="대광타운" placeholder="예: 삼성타워">
+                </div>
+                <div class="form-group">
+                    <label for="roadDong">동 (선택사항):</label>
+                    <input type="text" id="roadDong" value="" placeholder="예: A">
+                </div>
+                <div class="form-group">
+                    <label for="roadHo">호 (선택사항):</label>
+                    <input type="text" id="roadHo" value="202" placeholder="예: 1001">
+                </div>
+                <button type="button" onclick="testRoadAddressSearch()">도로명주소검색 실행</button>
+            </form>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <div id="result" class="result" style="display: none;">
+            <h3>API 응답 결과</h3>
+            <pre id="resultContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api/real-estate';
+
+        function showTab(tabName) {
+            // 모든 탭과 컨텐츠 비활성화
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 선택된 탭과 컨텐츠 활성화
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function showResult(data, isSuccess = true) {
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result ' + (isSuccess ? 'success' : 'error');
+            resultContent.textContent = JSON.stringify(data, null, 2);
+
+            // 결과로 스크롤
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function makeRequest(url, data) {
+            try {
+                console.log('요청 URL:', url);
+                console.log('요청 데이터:', data);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('응답 상태:', response.status);
+
+                const result = await response.json();
+                console.log('응답 데이터:', result);
+
+                if (response.ok && result.success !== false) {
+                    showResult(result, true);
+                } else {
+                    showResult(result, false);
+                }
+
+                return result;
+            } catch (error) {
+                console.error('요청 오류:', error);
+                showResult({ error: '네트워크 오류', message: error.message }, false);
+            }
+        }
+
+        async function testSimpleSearch() {
+            const data = {
+                phoneNo: document.getElementById('simplePhoneNo').value,
+                password: document.getElementById('simplePassword').value,
+                address: document.getElementById('simpleAddress').value
+            };
+
+            await makeRequest(`${API_BASE_URL}/simple-search`, data);
+        }
+
+        async function testLotNumberSearch() {
+            const data = {
+                phoneNo: document.getElementById('lotPhoneNo').value,
+                password: document.getElementById('lotPassword').value,
+                addrSido: document.getElementById('lotAddrSido').value,
+                addrDong: document.getElementById('lotAddrDong').value,
+                addrLotNumber: document.getElementById('lotAddrLotNumber').value,
+                realtyType: document.getElementById('lotRealtyType').value,
+                buildingName: document.getElementById('lotBuildingName').value || null,
+                dong: document.getElementById('lotDong').value || null,
+                ho: document.getElementById('lotHo').value || null
+            };
+
+            await makeRequest(`${API_BASE_URL}/lot-number-search`, data);
+        }
+
+        async function testRoadAddressSearch() {
+            const data = {
+                phoneNo: document.getElementById('roadPhoneNo').value,
+                password: document.getElementById('roadPassword').value,
+                addrSido: document.getElementById('roadAddrSido').value,
+                addrSigungu: document.getElementById('roadAddrSigungu').value,
+                addrRoadName: document.getElementById('roadAddrRoadName').value,
+                addrBuildingNumber: document.getElementById('roadAddrBuildingNumber').value,
+                buildingName: document.getElementById('roadBuildingName').value || null,
+                dong: document.getElementById('roadDong').value || null,
+                ho: document.getElementById('roadHo').value || null
+            };
+
+            await makeRequest(`${API_BASE_URL}/road-address-search`, data);
+        }
+    </script>
+</body>
+</html>

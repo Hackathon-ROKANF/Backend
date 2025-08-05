@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "codef.real-estate",
+      "type": "com.springboot.knockbackend.properties.CodefProperties",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "codef.real-estate.base-url",
+      "type": "java.lang.String",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    },
+    {
+      "name": "codef.real-estate.client-id",
+      "type": "java.lang.String",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    },
+    {
+      "name": "codef.real-estate.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    },
+    {
+      "name": "codef.real-estate.oauth-url",
+      "type": "java.lang.String",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    },
+    {
+      "name": "codef.real-estate.public-key-pem",
+      "type": "java.lang.String",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    },
+    {
+      "name": "codef.real-estate.timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "com.springboot.knockbackend.properties.CodefProperties"
+    }
+  ],
+  "hints": []
+}
